@@ -5,11 +5,14 @@
 export const environment = {
   production: false,
   firebase: {
-
+    apiKey: "AIzaSyBBsmc_seBCdBBDPfDskYKQAtXyJLVoOtg",
+    authDomain: "fir-course-recording-be876.firebaseapp.com",
+    projectId: "fir-course-recording-be876",
+    storageBucket: "fir-course-recording-be876.appspot.com",
+    messagingSenderId: "111695350487",
+    appId: "1:111695350487:web:1ce940ff09d5f17ee3fe92",
   },
-  api: {
-
-  }
+  api: {},
 };
 
 /*
@@ -19,4 +22,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
+import "zone.js/plugins/zone-error"; // Included with Angular CLI.
