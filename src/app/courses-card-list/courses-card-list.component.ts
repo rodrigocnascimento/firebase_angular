@@ -12,6 +12,7 @@ import { EditCourseDialogComponent } from "../edit-course-dialog/edit-course-dia
 import { catchError, tap } from "rxjs/operators";
 import { throwError } from "rxjs";
 import { Router } from "@angular/router";
+import { CoursesService } from "../services/courses.service";
 
 @Component({
   selector: "courses-card-list",
@@ -28,7 +29,11 @@ export class CoursesCardListComponent implements OnInit {
   @Output()
   courseDeleted = new EventEmitter<Course>();
 
-  constructor(private dialog: MatDialog, private router: Router) {}
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private coursesService: CoursesService
+  ) {}
 
   ngOnInit() {}
 
@@ -46,9 +51,25 @@ export class CoursesCardListComponent implements OnInit {
       .afterClosed()
       .subscribe((val) => {
         if (val) {
-          console.log("courseEditEmmiter", val);
           this.courseEdited.emit();
         }
       });
+  }
+
+  onDeleteCourse(course: Course) {
+    this.coursesService
+      .deleteCourseAndLessos(course.id)
+      .pipe(
+        tap(() => {
+          console.log("Course deleted", course);
+          this.courseDeleted.emit(course);
+        }),
+        catchError((error) => {
+          console.error(error);
+          alert("Could not delete course");
+          return throwError(error);
+        })
+      )
+      .subscribe();
   }
 }
