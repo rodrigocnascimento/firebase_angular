@@ -3,6 +3,7 @@ import { Course } from "../model/course";
 import { Observable, of } from "rxjs";
 import { Router } from "@angular/router";
 import { CoursesService } from "../services/courses.service";
+import { UserService } from "../services/user.service";
 
 @Component({
   selector: "home",
@@ -14,18 +15,20 @@ export class HomeComponent implements OnInit {
 
   advancedCourses$: Observable<Course[]>;
 
-  constructor(private router: Router, private coursesService: CoursesService) {}
+  constructor(
+    private router: Router,
+    private coursesService: CoursesService,
+    public user: UserService
+  ) {}
 
   ngOnInit() {
     this.reloadCourses();
   }
 
   reloadCourses() {
-    this.beginnersCourses$ = this.coursesService.loadCoursesByCategory(
-      "BEGINNER"
-    );
-    this.advancedCourses$ = this.coursesService.loadCoursesByCategory(
-      "ADVANCED"
-    );
+    this.beginnersCourses$ =
+      this.coursesService.loadCoursesByCategory("BEGINNER");
+    this.advancedCourses$ =
+      this.coursesService.loadCoursesByCategory("ADVANCED");
   }
 }
