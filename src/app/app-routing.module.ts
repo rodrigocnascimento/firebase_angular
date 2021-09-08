@@ -13,18 +13,33 @@ import {
 import { CreateUserComponent } from "./create-user/create-user.component";
 import { CourseResolver } from "./services/course.resolve";
 
+const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(["login"]);
+const adminOnly = () => hasCustomClaim("admin");
+
 const routes: Routes = [
   {
     path: "",
     component: HomeComponent,
+    canActivate: [AngularFireAuthGuard],
+    data: {
+      authGuardPipe: redirectUnauthorizedToLogin,
+    },
   },
   {
     path: "create-course",
     component: CreateCourseComponent,
+    canActivate: [AngularFireAuthGuard],
+    data: {
+      authGuardPipe: adminOnly,
+    },
   },
   {
     path: "create-user",
     component: CreateUserComponent,
+    canActivate: [AngularFireAuthGuard],
+    data: {
+      authGuardPipe: adminOnly,
+    },
   },
   {
     path: "about",
@@ -37,6 +52,10 @@ const routes: Routes = [
   {
     path: "courses/:courseUrl",
     component: CourseComponent,
+    canActivate: [AngularFireAuthGuard],
+    data: {
+      authGuardPipe: redirectUnauthorizedToLogin,
+    },
     resolve: {
       course: CourseResolver,
     },
