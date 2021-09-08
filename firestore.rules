@@ -1,9 +1,47 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if
-          request.time < timestamp.date(2021, 9, 29);
+
+    function isAdmin() {
+      return isAuthenticated() && 'admin' in request.auth.token && 
+      request.auth.token.admin == true;
+    }
+
+    function isAuthenticated() {
+      return request.auth.uid != null;
+    }
+
+    function isNonEmptyString(fieldName) {
+      return request.resource.data[fieldName] is string && 
+      request.resource.data[fieldName].size() > 0
+    }
+
+    function isKnownUser() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isValidCourse() {
+      return request.resource.data.seqNo is number &&
+      request.resource.data.seqNo >= 0 &&
+      isNonEmptyString("url");
+    }
+
+    match /courses/{courseId} {
+
+      allow read: if isKnownUser();
+
+      allow delete: if isAdmin();
+      allow create, update: if isValidCourse() && isAdmin();
+
+      match /lessons/{lessonId} {
+    
+        allow read: if isKnownUser();
+      }
+    }
+
+    match /{path=**}/lessons/{lessonId} {
+      allow read: if isKnownUser();
     }
   }
 }
