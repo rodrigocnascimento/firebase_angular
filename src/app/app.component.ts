@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
     private readonly afStorage: AngularFireStorage
   ) {
     if (environment.useEmulators) {
-      console.log("storage?");
       this.afStorage.storage.useEmulator("localhost", 9199);
     }
   }

@@ -18,6 +18,10 @@ import { CoursesService } from "../services/courses.service";
 export class CreateCourseComponent implements OnInit {
   courseId: string;
 
+  iconUrl: string;
+
+  percentageChanges$: Observable<number>;
+
   form = this.fb.group({
     description: ["", Validators.required],
     category: ["BEGGINER", Validators.required],
@@ -44,6 +48,7 @@ export class CreateCourseComponent implements OnInit {
 
     const newCourse: Partial<Course> = {
       description: formValues.description,
+      iconUrl: this.iconUrl,
       url: formValues.url,
       longDescription: formValues.longDescription,
       promo: formValues.promo,
@@ -51,8 +56,6 @@ export class CreateCourseComponent implements OnInit {
     };
 
     newCourse.promoStartAt = Timestamp.fromDate(this.form.value.promoStart);
-
-    console.table(newCourse);
 
     this.courseService
       .createCourse(newCourse, this.courseId)
@@ -72,15 +75,28 @@ export class CreateCourseComponent implements OnInit {
 
   uploadThumbnail(event) {
     const file: File = event.target.files[0];
-    console.log(file);
 
     const filePath = `courses/${this.courseId}/${file.name}`;
 
     const task = this.storage.upload(filePath, file, {
       cacheControl: "max-age=2592000,public",
     });
-    console.log(task);
 
-    task.snapshotChanges().subscribe();
+    this.percentageChanges$ = task.percentageChanges();
+
+    task
+      .snapshotChanges()
+      .pipe(
+        last(),
+        concatMap(() => this.storage.ref(filePath).getDownloadURL()),
+        tap((url) => (this.iconUrl = url)),
+        catchError((error) => {
+          console.error(error);
+          alert("Could not create thumbnail url");
+
+          return throwError(error);
+        })
+      )
+      .subscribe();
   }
 }
