@@ -1,15 +1,27 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "outDir": "lib",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2019",
     "sourceMap": true,
-    "strict": true,
-    "target": "es2017"
+    "outDir": "lib",
+    "baseUrl": "./",
+    "incremental": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@root/*": ["./src/*"]
+    }
   },
-  "compileOnSave": true,
-  "include": [
-    "src"
-  ]
+  "watchOptions": {
+    "watchFile": "useFsEvents",
+    "watchDirectory": "useFsEvents",
+    "fallbackPolling": "dynamicPriority",
+    "synchronousWatchDirectory": true
+  },
+  "include": ["src/**/*"]
 }
