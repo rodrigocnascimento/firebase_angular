@@ -7,14 +7,20 @@ import { LoginComponent } from "./login/login.component";
 import { CreateCourseComponent } from "./create-course/create-course.component";
 import {
   AngularFireAuthGuard,
-  hasCustomClaim,
   redirectUnauthorizedTo,
+  customClaims,
 } from "@angular/fire/auth-guard";
 import { CreateUserComponent } from "./create-user/create-user.component";
 import { CourseResolver } from "./services/course.resolve";
+import { pipe } from "rxjs";
+import { map } from "rxjs/operators";
 
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(["login"]);
-const adminOnly = () => hasCustomClaim("admin");
+const adminOnly = () =>
+  pipe(
+    customClaims,
+    map((claim) => claim.admin === true)
+  );
 
 const routes: Routes = [
   {

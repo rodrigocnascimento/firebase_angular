@@ -13,7 +13,10 @@ export const environment = {
     messagingSenderId: "111695350487",
     appId: "1:111695350487:web:1ce940ff09d5f17ee3fe92",
   },
-  api: {},
+  api: {
+    createUser:
+      "http://localhost:5001/fir-course-recording-be876/us-central1/createUser",
+  },
 };
 
 /*

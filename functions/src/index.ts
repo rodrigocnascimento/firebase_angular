@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { createUserApp } from "./create-user";
 
 (function cloudFunctionInit() {
   return functions.runWith({
@@ -14,6 +15,8 @@ async function runTrigger(trigger: string, data: any, context: any) {
 
   return result;
 }
+
+export const createUser = functions.https.onRequest(createUserApp);
 
 export const onAddCourseUpdatePromoCounter = functions.firestore
   .document("courses/{courseId}")
