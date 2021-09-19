@@ -1,5 +1,15 @@
 {
   "projects": {
-    "default": "fir-course-recording-be876"
+    "default": "fir-course-recording-be876",
+    "prod": "test-project-prod"
+  },
+  "targets": {
+    "test-project-prod": {
+      "hosting": {
+        "prod": [
+          "test-project-prod"
+        ]
+      }
+    }
   }
 }
